@@ -1,7 +1,19 @@
 package main
 
-import "fmt"
+import "syscall/js"
+
+func subtract(i []js.Value) {
+	js.Global().Set("output", js.ValueOf(i[0].Int()-i[1].Int()))
+	println(js.ValueOf(i[0].Int() - i[1].Int()).String())
+}
+
+func registerCallbacks() {
+	js.Global().Set("add", js.NewCallback(add))
+	js.Global().Set("subtract", js.NewCallback(subtract))
+}
 
 func main() {
-	fmt.Println("Hello, WebAssembly!")
+	c := make(chan struct{}, 0)
+	registerCallbacks()
+	<-c
 }
